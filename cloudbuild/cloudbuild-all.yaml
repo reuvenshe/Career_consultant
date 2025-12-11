@@ -4,25 +4,25 @@ steps:
   # בניית Frontend
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build Frontend'
-    args: ['build', '-t', '${_FE_IMAGE}', 'frontend/']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/${PROJECT_ID}/shay-registry/shay-frontend:$SHORT_SHA', 'frontend/']
     waitFor: ['-'] # המקף אומר: תתחיל מיד, אל תחכה לאף אחד
 
   # בניית Backend
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build Backend'
-    args: ['build', '-t', '${_BE_IMAGE}', 'backend/']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/${PROJECT_ID}/shay-registry/shay-backend:$SHORT_SHA', 'backend/']
     waitFor: ['-'] # תתחיל מיד (רץ במקביל לפרונט!)
 
   # === שלב הדחיפה (אחרי שהבנייה מסתיימת) ===
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Push Frontend'
-    args: ['push', '${_FE_IMAGE}']
+    args: ['push', 'us-central1-docker.pkg.dev/${PROJECT_ID}/shay-registry/shay-frontend:$SHORT_SHA']
     waitFor: ['Build Frontend']
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Push Backend'
-    args: ['push', '${_BE_IMAGE}']
+    args: ['push', 'us-central1-docker.pkg.dev/${PROJECT_ID}/shay-registry/shay-backend:$SHORT_SHA']
     waitFor: ['Build Backend']
 
   # === שלב הפריסה ===
@@ -30,13 +30,13 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Deploy Frontend'
     entrypoint: gcloud
-    args: ['run', 'deploy', 'shay-frontend', '--image', '${_FE_IMAGE}', '--region', '${_REGION}', '--allow-unauthenticated']
+    args: ['run', 'deploy', 'shay-frontend', '--image', 'us-central1-docker.pkg.dev/${PROJECT_ID}/shay-registry/shay-frontend:$SHORT_SHA', '--region', '${_REGION}', '--allow-unauthenticated']
     waitFor: ['Push Frontend']
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Deploy Backend'
     entrypoint: gcloud
-    args: ['run', 'deploy', 'shay-backend', '--image', '${_BE_IMAGE}', '--region', '${_REGION}']
+    args: ['run', 'deploy', 'shay-backend', '--image', 'us-central1-docker.pkg.dev/${PROJECT_ID}/shay-registry/shay-backend:$SHORT_SHA', '--region', '${_REGION}']
     waitFor: ['Push Backend']
 
 substitutions:

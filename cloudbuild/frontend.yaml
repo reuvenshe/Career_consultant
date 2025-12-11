@@ -3,12 +3,12 @@ steps:
   # 1. בניית האימג' (Docker Build)
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build Frontend'
-    args: ['build', '-t', '${_IMAGE_NAME}', 'frontend/']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/${PROJECT_ID}/shay-registry/shay-frontend:$SHORT_SHA', 'frontend/']
 
   # 2. דחיפה ל-Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Push Frontend'
-    args: ['push', '${_IMAGE_NAME}']
+    args: ['push', 'us-central1-docker.pkg.dev/${PROJECT_ID}/shay-registry/shay-frontend:$SHORT_SHA']
 
   # 3. פריסה ל-Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -19,7 +19,7 @@ steps:
       - 'deploy'
       - 'shay-frontend'
       - '--image'
-      - '${_IMAGE_NAME}'
+      - 'us-central1-docker.pkg.dev/${PROJECT_ID}/shay-registry/shay-frontend:$SHORT_SHA'
       - '--region'
       - '${_REGION}'
       - '--platform'
