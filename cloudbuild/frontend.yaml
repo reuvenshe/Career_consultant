@@ -1,4 +1,8 @@
 
+options:
+  # הפקודה הזו אומרת לגוגל: "שלח את הלוגים למערכת היומן הרגילה של GCP, 
+  # אל תנסה להשתמש ב-GCS Bucket."
+  logging: CLOUD_LOGGING_ONLY
 steps:
   # 1. בניית האימג' (Docker Build)
   - name: 'gcr.io/cloud-builders/docker'
