@@ -9,7 +9,7 @@ const HOST = (typeof window !== 'undefined' && window.HOST)
     ? window.HOST
     : ((window.location.hostname === 'localhost' || window.location.hostname === '' || window.location.hostname === '127.0.0.1')
         ? 'http://localhost:3000' // עבודה לוקאלית: פונה לפורט 3000 המקומי
-        : CLOUD_RUN_BACKEND_URL); // עבודה בענן: פונה ל-URL הקבוע של שירות ה-Backend
+        : CLOUD_RUN_BACKEND_URL); // עבודה בענן:   פונה ל-URL הקבוע של שירות ה-Backend
 
 const API_CONFIG = {
     // HOST הוא כבר ה-URL המלא (כולל HTTPS ופורט 443 משתמע)
