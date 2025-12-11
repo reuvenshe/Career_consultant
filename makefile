@@ -45,7 +45,7 @@ release-backend:
 release-all:
 	@echo "🚀🚀 מפעיל Pipeline משולב (גרסה: $(DATE))..."
 	gcloud builds submit . \
-		--config cloudbuild/all.yaml \
+		--config cloudbuild/cloudbuild-all.yaml \
 		--substitutions=_FE_IMAGE=$(FE_IMAGE),_BE_IMAGE=$(BE_IMAGE)
 # ==========================================
 # Local Development

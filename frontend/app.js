@@ -4,7 +4,7 @@ const CLOUD_RUN_BACKEND_URL = 'https://shay-backend-152345784611.us-central1.run
 // ==========================
 
 // הגדרת ה-HOST באופן דינמי
-// הקוד בודק קודם כל אם יש משתנה מוזרק (window.HOST). אם לא, הוא בודק את סביבת ההרצה:
+// הקוד בודק קודם כל אם יש משתנה מוזרק (window.HOST). אם לא, הוא בודק את סביבת   ההרצה:
 const HOST = (typeof window !== 'undefined' && window.HOST)
     ? window.HOST
     : ((window.location.hostname === 'localhost' || window.location.hostname === '' || window.location.hostname === '127.0.0.1')
