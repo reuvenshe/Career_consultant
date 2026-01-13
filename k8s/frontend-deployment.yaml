@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shay-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shay-frontend
+  template:
+    metadata:
+      labels:
+        app: shay-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: us-central1-docker.pkg.dev/shay-project-477811/shay-registry/shay-frontend:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: shay-frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP

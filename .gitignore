@@ -3,3 +3,5 @@ Node_modules
 backend/.env
 .DS_Store
 .vscode
+k8s/secrets.yaml
+sql-key.json

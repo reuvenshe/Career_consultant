@@ -43,5 +43,17 @@ steps:
     args: ['run', 'deploy', 'shay-backend', '--image', 'us-central1-docker.pkg.dev/${PROJECT_ID}/shay-registry/shay-backend:$SHORT_SHA', '--region', '${_REGION}']
     waitFor: ['Push Backend']
 
+# שלב חדש: עדכון ה-Deployment בקוברנטיס עם האימג' החדש של הבקאנד
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: 'Deploy to K8s'
+    args:
+    - 'set'
+    - 'image'
+    - 'deployment/shay-backend'
+    - 'backend=us-central1-docker.pkg.dev/${PROJECT_ID}/shay-registry/shay-backend:$SHORT_SHA' # כאן גוגל מזריקה את ה-SHA
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=us-central1'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=shay-project-cluster'
+
 substitutions:
   _REGION: "us-central1"

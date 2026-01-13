@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shay-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shay-backend
+  template:
+    metadata:
+      labels:
+        app: shay-backend
+    spec:
+      serviceAccountName: k8s-sql-sa
+      containers:
+      # 1. הקונטיינר של האפליקציה שלך
+      - name: backend
+        image: us-central1-docker.pkg.dev/shay-project-477811/shay-registry/shay-backend@sha256:0cfbbd7a04e97f3c7df86e6ed737c26740082ad6bffe679aba8d09c6e8188679
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PORT
+          value: "8080"
+        - name: DB_HOST
+          value: "127.0.0.1"
+        - name: DB_USER
+          value: "shay_user"
+        - name: DB_NAME
+          value: "Shay_Project"
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: shay-project-secrets
+              key: db-password
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: shay-project-secrets
+              key: openai-api-key 
+
+      # 2. ה-Sidecar של Cloud SQL Proxy
+      - name: cloud-sql-proxy
+        image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.1.0
+        args:
+          - "--port=3306"
+          - "--credentials-file=/secrets/service_account.json" # שימוש במפתח
+          - "shay-project-477811:us-central1:shay-project-db"
+        volumeMounts:
+        - name: sql-key-volume
+          mountPath: /secrets
+          readOnly: true
+      volumes:
+      - name: sql-key-volume
+        secret:
+          secretName: sql-key-secret
